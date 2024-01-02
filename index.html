@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <h1>simple quiz</h1>
+        <div class="quiz">
+<h2 id="question">question </h2>
+<div id="answer-button">
+    <button class="btn">Answer 1</button>
+    <button class="btn">Answer 2</button>
+    <button class="btn">Answer 3</button>
+    <button class="btn">Answer 4</button> 
+</div>
+<button id="next-btn">NEXT</button>
+        </div>
+    </div>
+    <script>
+        const question=[
+            {
+                question:'which is largest animal in the world?',
+                answer:[
+                    {text:'shark',correct:false},
+                    {text:'blue whale',correct:true},
+                    {text:'elephant',correct:false},
+                    {text:'cat',correct:false},
+                ]
+
+            },
+            {
+                question:'which is largest desert  in the world?',
+                answer:[
+                    {text:'atlas',correct:false},
+                    {text:'Antarctica',correct:true},
+                    {text:'Gobi',correct:false},
+                    {text:'ranger',correct:false},
+                ]
+
+            },
+            {
+                question:'which is smallest continent in the world?',
+                answer:[
+                    {text:'asia',correct:false},
+                    {text:'australia',correct:true},
+                    {text:'elephant',correct:false},
+                    {text:'arctic',correct:false},
+                ]
+
+            },
+            {
+                question:'which is samallest country in the world?',
+                answer:[
+                    {text:'vatican city',correct:true},
+                    {text:'bhutan',correct:false},
+                    {text:'nepal',correct:false},
+                    {text:'cat',correct:false},
+                ]
+
+            },
+           
+        ]
+
+        const questionelement = document.getElementById('question');
+    const answerbtn = document.getElementById('answer-button');
+    const nextbtn = document.getElementById('next-btn');
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const startQuiz = () => {
+        currentQuestionIndex = 0;
+        score = 0;
+        nextbtn.innerHTML = 'NEXT';
+        showQuestion();
+    };
+
+    const showQuestion = () => {
+        resetState()
+        const currentQuestion = question[currentQuestionIndex];
+        let questionNO = currentQuestionIndex + 1;
+        questionelement.innerHTML = questionNO + '.' + currentQuestion.question;
+
+        // Clear previous answer buttons before adding new ones
+    //  answerbtn.innerHTML = '';
+
+        currentQuestion.answer.forEach((answer) => {
+         
+            const btn = document.createElement('button');
+            btn.innerHTML = answer.text; // Corrected from "answer.text" to "answer.text"
+            btn.classList.add('btn');
+            answerbtn.appendChild(btn);
+            if(answer.correct){
+                btn.dataset.correct=answer.correct
+                // what is dataswet over all it create custom atriibute and attached to button like below that data-correct="true"
+                // <button class="btn" data-correct="true">click</button>    
+                // 
+            }
+            btn.addEventListener('click',selectAns)
+
+        });
+    };
+
+    const resetState=()=>{
+        nextbtn.style.display='none';
+        while(answerbtn.firstChild){
+            answerbtn.removeChild(answerbtn.firstChild)
+        }
+    }
+
+const selectAns=(e)=>{
+    const selectbtn=e.target
+    const  iscorrect=selectbtn.dataset.correct==="true"
+    if(iscorrect){
+        selectbtn.classList.add('correct')
+        score++
+    }else{
+        selectbtn.classList.add('incorrect')
+    }
+    // after clicking ans btn then it disable other btn so we cant another btn
+
+    // Arry.from()  create shallow btn of arry
+Array.from(answerbtn.children).forEach(button=>{
+    if(button.dataset.correct==='true'){
+        button.classList.add('correct')
+    }
+    button.disabled=true   // disabled js properties hai
+});
+nextbtn.style.display='block'
+
+}
+
+const showscore=()=>{
+    resetState()
+    questionelement.innerHTML=`you scored ${score} out of ${question.length}`
+    nextbtn.innerHTML='play Again'
+    nextbtn.style.display='block'
+}
+
+const handleNextButton=()=>{
+    currentQuestionIndex++;
+    if(currentQuestionIndex < question.length){
+        showQuestion()
+    }
+    else{
+        showscore()
+    }
+}
+nextbtn.addEventListener('click',()=>{
+    if(currentQuestionIndex < question.length){
+        handleNextButton()
+    }else{
+        startQuiz()
+    }
+})
+
+
+    startQuiz()
+
+    </script>
+</body>
+</html>
